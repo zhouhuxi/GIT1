@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/aop
+       http://www.springframework.org/schema/aop/spring-aop.xsd
+       http://www.springframework.org/schema/context 
+       http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <!-- 开启注解扫描（生成bean） -->
+    <context:component-scan base-package="com.j1823.spring.demo01"/>
+
+    <!-- 开启自动代理 -->
+    <aop:aspectj-autoproxy/>
+
+    <bean id="personDao" class="com.j1823.spring.demo02.PersonDao"/>
+    <bean id="personAdvice" class="com.j1823.spring.demo02.PersonAdvice"/>
+    <aop:config>
+        <!-- 定义切点 -->
+        <aop:pointcut id="addPointcut" expression="execution(* com.j1823.spring.demo02.PersonDao.add())"/>
+        <!-- 定义切面 -->
+        <aop:aspect ref="personAdvice">
+            <!-- 环绕增强 -->
+            <aop:around method="addAdvice03" pointcut-ref="addPointcut"/>
+            <!-- 前置增强 -->
+            <aop:before method="addAdvice01" pointcut-ref="addPointcut"/>
+            <!-- 后置增强 -->
+            <aop:after-returning method="addAdvice02" pointcut-ref="addPointcut"/>
+            <!-- 最终增强 -->
+            <aop:after method="addAdvice04" pointcut-ref="addPointcut"/>
+        </aop:aspect>
+    </aop:config>
+
+
+</beans>
